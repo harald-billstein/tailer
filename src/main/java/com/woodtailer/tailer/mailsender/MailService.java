@@ -17,6 +17,10 @@ public class MailService {
   // TODO REMOVE!!!!!!
   private String password = "harrebarre";
 
+  public MailService(){
+
+  }
+
 
   private void sendMail(String emailMessage, String emailaddress) {
 
@@ -53,5 +57,11 @@ public class MailService {
     } else {
       LOGGER.info("NO SUBSCRIBERS TO ALERT");
     }
+  }
+
+  public class MailServiceBuilder{
+
+
+
   }
 }

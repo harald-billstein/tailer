@@ -1,6 +1,6 @@
 package com.woodtailer.tailer.server.rest;
 
-public class Response {
+public class PingServiceResponse {
 
   private boolean success;
   private long responseTimeInMs;
