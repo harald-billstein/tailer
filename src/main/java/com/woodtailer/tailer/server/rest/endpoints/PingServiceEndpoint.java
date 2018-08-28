@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(path = "/v1")
-public class PingService {
+public class PingServiceEndpoint {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(PingService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PingServiceEndpoint.class);
 
   private HeartBeatChecker heartBeatChecker;
 
-  public PingService(HeartBeatChecker heartBeatChecker) {
+  public PingServiceEndpoint(HeartBeatChecker heartBeatChecker) {
     this.heartBeatChecker = heartBeatChecker;
   }
 

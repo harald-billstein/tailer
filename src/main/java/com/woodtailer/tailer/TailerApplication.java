@@ -9,4 +9,5 @@ public class TailerApplication {
   public static void main(String[] args) {
     SpringApplication.run(TailerApplication.class, args);
   }
+
 }

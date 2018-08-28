@@ -12,11 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 @RequestMapping(path = "/v1")
-public class MailService {
+public class MailServiceEndpoint {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(MailServiceEndpoint.class);
+  private EmailSubscribers emailSubscribers;
 
-  private EmailSubscribers emailSubscribers = EmailSubscribers.getInstance();
+  public MailServiceEndpoint(EmailSubscribers emailSubscribers) {
+    this.emailSubscribers = emailSubscribers;
+  }
 
   @PutMapping(path = "/mailservice/emailaddress/")
   public ResponseEntity<String> addEmailAddress(@RequestParam String mail) {
@@ -26,5 +29,4 @@ public class MailService {
     }
     return ResponseEntity.ok(mail);
   }
-
 }

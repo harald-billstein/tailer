@@ -1,26 +1,32 @@
 package com.woodtailer.tailer.mailsender;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.Properties;
 import javax.mail.internet.MimeMessage;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MailService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
+
   private JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-  private String username = "harald.billstein@gmail.com";
 
-  // TODO REMOVE!!!!!!
-  private String password = "harrebarre";
 
-  public MailService(){
-
-  }
-
+  @Value("${email}")
+  private String username;
+  @Value("${password}")
+  private String password;
 
   private void sendMail(String emailMessage, String emailaddress) {
 
@@ -39,7 +45,13 @@ public class MailService {
       MimeMessageHelper helper = new MimeMessageHelper(message, true);
       helper.setFrom("WoodTailer@gmail.com");
       helper.setSubject("ERROR/WARN DETECTED");
-      helper.setText(emailMessage, true); // true to activate multipart
+
+      StringWriter writer = new StringWriter();
+      File file = new ClassPathResource("mailtemplet.html").getFile();
+
+      IOUtils.copy(new FileInputStream(file), writer, "utf-8");
+
+      helper.setText(writer.toString().replace("logmessage", emailMessage), true);
       helper.addTo(emailaddress);
     } catch (Exception ex) {
       ex.getStackTrace();
@@ -50,8 +62,8 @@ public class MailService {
   public void sendMailToSubscribers(String message, List<String> addresses) {
 
     if (addresses.size() > 0) {
-      for (int i = 0; i < addresses.size(); i++) {
-        sendMail(message, addresses.get(i));
+      for (String address : addresses) {
+        sendMail(message, address);
       }
       LOGGER.info("SUBSCRIBERS ALERTED");
     } else {
@@ -59,9 +71,5 @@ public class MailService {
     }
   }
 
-  public class MailServiceBuilder{
 
-
-
-  }
 }
