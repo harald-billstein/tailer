@@ -1,6 +1,6 @@
 package com.woodtailer.tailer.server.rest.endpoints;
 
-import com.woodtailer.tailer.heartbeat.HeartBeatChecker;
+import com.woodtailer.tailer.server.rest.endpoints.handler.EndpointHandler;
 import com.woodtailer.tailer.server.rest.response.PingServiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,25 +15,16 @@ public class PingServiceEndpoint {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(PingServiceEndpoint.class);
 
-  private HeartBeatChecker heartBeatChecker;
+  private EndpointHandler endpointHandler;
 
-  public PingServiceEndpoint(HeartBeatChecker heartBeatChecker) {
-    this.heartBeatChecker = heartBeatChecker;
+  public PingServiceEndpoint(EndpointHandler endpointHandler) {
+    this.endpointHandler = endpointHandler;
   }
 
   @GetMapping(path = "/pingservice")
   public ResponseEntity<PingServiceResponse> checkStatusOfApplication() {
 
-    PingServiceResponse pingServiceResponse = new PingServiceResponse();
-
-    long start = System.currentTimeMillis();
-    boolean status = heartBeatChecker.checkHeatBeat();
-    long end = System.currentTimeMillis();
-
-    pingServiceResponse.setResponseTimeInMs(end - start);
-    pingServiceResponse.setSuccess(status);
-
-    return ResponseEntity.ok(pingServiceResponse);
+    return ResponseEntity.ok(endpointHandler.heartBeatCheck());
   }
 
 }
