@@ -19,31 +19,32 @@ public class TailingController implements TailerServiceListener {
   private SocketDistributor socketDistributor;
   private MailService mailService;
   private EmailSubscribers emailSubscribers;
+  private TailingService tailingService;
 
   @Value("${logfile.url}")
   private String path;
 
   public TailingController(MailService mailService, EmailSubscribers emailSubscribers,
-      SocketDistributor socketDistributor) {
+      SocketDistributor socketDistributor, TailingService tailingService) {
     this.mailService = mailService;
     this.emailSubscribers = emailSubscribers;
     this.socketDistributor = socketDistributor;
+    this.tailingService = tailingService;
   }
 
   public void startTailingService() {
-    LOGGER.info("STARTING TAILING SERVICE");
+    LOGGER.info("STARTING TAILING SERVICE...");
 
-    TailingService tailingService = new TailingService();
     tailingService.setTailerServiceListener(this);
     tailingService.run(path);
   }
 
   @Override
   public void update(String s) {
-    LOGGER.info("New log found: " + s);
+    LOGGER.info("NEW LOG FOUND");
 
     try {
-      LOGGER.info("Sending to socketDistributor central");
+      LOGGER.info("SENDING TO SOCKET...");
       socketDistributor.SendLog(s);
 
       if (s.contains("WARN") || s.contains("ERROR")) {
@@ -51,12 +52,15 @@ public class TailingController implements TailerServiceListener {
       }
 
     } catch (Exception e) {
-      LOGGER.error("sending to socketDistributor central failed: " + e);
+      e.getStackTrace();
+      LOGGER.error("SENDING TO SOCKET FAILED..." + e);
     }
+    LOGGER.info("WAITING...");
   }
 
   @Override
   public void sendMail(Exception e) {
+    LOGGER.info("WARNING/ERROR DETECTED SENDING MAIL...");
     mailService
         .sendMailToSubscribers(e.getMessage(), emailSubscribers.getAddresses());
   }

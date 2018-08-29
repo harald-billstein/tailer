@@ -1,4 +1,4 @@
-package com.woodtailer.tailer.server.rest;
+package com.woodtailer.tailer.server.rest.response;
 
 public class PingServiceResponse {
 

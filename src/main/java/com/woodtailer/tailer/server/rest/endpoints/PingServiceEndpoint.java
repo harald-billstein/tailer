@@ -1,7 +1,7 @@
 package com.woodtailer.tailer.server.rest.endpoints;
 
 import com.woodtailer.tailer.heartbeat.HeartBeatChecker;
-import com.woodtailer.tailer.server.rest.PingServiceResponse;
+import com.woodtailer.tailer.server.rest.response.PingServiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

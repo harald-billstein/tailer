@@ -1,6 +1,7 @@
 package com.woodtailer.tailer.server.rest.endpoints;
 
 import com.woodtailer.tailer.mailsender.EmailSubscribers;
+import com.woodtailer.tailer.server.rest.response.MailResponse;
 import com.woodtailer.tailer.util.EmailVerifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +23,21 @@ public class MailServiceEndpoint {
   }
 
   @PutMapping(path = "/mailservice/emailaddress/")
-  public ResponseEntity<String> addEmailAddress(@RequestParam String mail) {
+  public ResponseEntity<MailResponse> addEmailAddress(@RequestParam String mail) {
+    MailResponse mailResponse = new MailResponse();
 
-    if (EmailVerifier.validateMailadress(mail)) {
-      emailSubscribers.getAddresses().add(mail);
+    if (EmailVerifier.validateMailadress(mail) && !EmailVerifier
+        .isDuplicate(mail, emailSubscribers)) {
+      emailSubscribers.getAddresses().add(mail.toLowerCase());
+      mailResponse.setSuccess(true);
+      mailResponse.setMessage("Mail to subscribers list");
+      mailResponse.setRegisterdMail(mail);
+    } else {
+      mailResponse.setSuccess(false);
+      mailResponse.setMessage("Duplicate or not valid email");
+      mailResponse.setRegisterdMail(mail);
     }
-    return ResponseEntity.ok(mail);
+
+    return ResponseEntity.ok(mailResponse);
   }
 }

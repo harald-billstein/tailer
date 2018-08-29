@@ -14,10 +14,6 @@ public class TailingService implements TailerListener {
 
   private TailerServiceListener tailerServiceListener;
 
-  public TailingService() {
-    LOGGER.info("TailingService starting...");
-  }
-
   public void setTailerServiceListener(TailerServiceListener tailerServiceListener) {
     this.tailerServiceListener = tailerServiceListener;
   }
@@ -31,13 +27,13 @@ public class TailingService implements TailerListener {
       if (file.exists()) {
         tailer.run();
       } else {
-        LOGGER.error("File not found!");
+        LOGGER.error("FILE NOT FOUND");
       }
 
     });
 
     tailerService.start();
-    LOGGER.info("TailingService started");
+    LOGGER.info("TALINGSERVICE STARTED...");
   }
 
   @Override

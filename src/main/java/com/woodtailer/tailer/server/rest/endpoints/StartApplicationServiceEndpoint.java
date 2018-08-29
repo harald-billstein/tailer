@@ -1,6 +1,7 @@
 package com.woodtailer.tailer.server.rest.endpoints;
 
 import com.woodtailer.tailer.controller.TailingController;
+import com.woodtailer.tailer.server.rest.response.StartApplicationResonse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +23,12 @@ public class StartApplicationServiceEndpoint {
   }
 
   @PostMapping(path = "/application/starter")
-  public ResponseEntity<String> startApplicartion() {
-
+  public ResponseEntity<StartApplicationResonse> startApplicartion() {
     tailingController.startTailingService();
-
-    return ResponseEntity.ok("started");
+    //TODO CHECK SO APP STARTED
+    StartApplicationResonse startApplicationResonse = new StartApplicationResonse();
+    startApplicationResonse.setApplicationStarted(true);
+    return ResponseEntity.ok(startApplicationResonse);
   }
 
 }

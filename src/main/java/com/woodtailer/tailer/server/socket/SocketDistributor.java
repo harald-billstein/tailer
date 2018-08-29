@@ -13,9 +13,7 @@ public class SocketDistributor {
 
   @MessageMapping("/logs")
   @SendTo("log/test")
-  public String SendLog(String log) throws Exception {
-    Thread.sleep(1000);
-    LOGGER.info("Distributing to subscribers :" + log);
+  public String SendLog(String log) {
     return log;
   }
 
