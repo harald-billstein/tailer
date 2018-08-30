@@ -52,7 +52,7 @@ public class EndpointHandler {
     PingServiceResponse pingServiceResponse = new PingServiceResponse();
 
     long start = System.currentTimeMillis();
-    boolean status = heartBeatChecker.checkHeatBeat();
+    boolean status = heartBeatChecker.getPuls();
     long end = System.currentTimeMillis();
 
     pingServiceResponse.setResponseTimeInMs(end - start);
@@ -63,7 +63,16 @@ public class EndpointHandler {
 
   }
 
-  public StartApplicationResonse startApplication() {
+
+public StartApplicationResonse startHeartbeat() {
+
+    tailingController.startPingService();
+    StartApplicationResonse startApplicationResonse = new StartApplicationResonse();
+    startApplicationResonse.setApplicationStarted(true);
+    return startApplicationResonse;
+}
+
+  public StartApplicationResonse startTaling() {
     LOGGER.info("APPLICATION STARTED...");
     //TODO CHECK SO APP STARTED
     tailingController.startTailingService();

@@ -4,6 +4,4 @@ public interface TailerServiceListener {
 
   void update(String s);
 
-  void sendMail(Exception e);
-
 }

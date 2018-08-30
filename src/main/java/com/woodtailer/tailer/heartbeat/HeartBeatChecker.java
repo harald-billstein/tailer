@@ -13,7 +13,7 @@ public class HeartBeatChecker {
   @Value("${heartbeat.url}")
   private URL url;
 
-  public boolean checkHeatBeat() {
+  public boolean getPuls() {
 
     try {
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();

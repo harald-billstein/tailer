@@ -11,9 +11,10 @@ public class SocketDistributor {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(SocketDistributor.class);
 
-  @MessageMapping("/logs")
-  @SendTo("log/test")
+  @MessageMapping("/hello")
+  @SendTo("/topic/greetings")
   public String SendLog(String log) {
+    LOGGER.info("SENDING LOG : " + log);
     return log;
   }
 

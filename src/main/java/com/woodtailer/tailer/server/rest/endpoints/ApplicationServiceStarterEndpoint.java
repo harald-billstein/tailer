@@ -11,20 +11,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(path = "/v1")
-public class StartApplicationServiceEndpoint {
+public class ApplicationServiceStarterEndpoint {
 
   private static final Logger LOGGER = LoggerFactory
-      .getLogger(StartApplicationServiceEndpoint.class);
+      .getLogger(ApplicationServiceStarterEndpoint.class);
 
   private EndpointHandler endpointHandler;
 
-  public StartApplicationServiceEndpoint(EndpointHandler endpointHandler) {
+  public ApplicationServiceStarterEndpoint(EndpointHandler endpointHandler) {
     this.endpointHandler = endpointHandler;
   }
 
-  @PostMapping(path = "/application/starter")
-  public ResponseEntity<StartApplicationResonse> startApplicartion() {
-    return ResponseEntity.ok(endpointHandler.startApplication());
+  @PostMapping(path = "/application/tailer/starter")
+  public ResponseEntity<StartApplicationResonse> startTailer() {
+    return ResponseEntity.ok(endpointHandler.startTaling());
+  }
+
+  @PostMapping(path = "/application/heartbeat/starter")
+  public ResponseEntity<StartApplicationResonse> startHeartbeat() {
+    return ResponseEntity.ok(endpointHandler.startHeartbeat());
   }
 
 }
