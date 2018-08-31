@@ -1,9 +1,7 @@
 package com.woodtailer.tailer.controller;
 
-import com.woodtailer.tailer.client.socket.SocketController;
+import com.woodtailer.tailer.client.socket.MyMessageHandler;
 import com.woodtailer.tailer.heartbeat.HeartBeatChecker;
-import com.woodtailer.tailer.mailsender.EmailSubscribers;
-import com.woodtailer.tailer.mailsender.MailService;
 import com.woodtailer.tailer.tailing.TailerServiceListener;
 import com.woodtailer.tailer.tailing.TailingService;
 import org.slf4j.Logger;
@@ -17,25 +15,21 @@ public class TailingController implements TailerServiceListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TailingController.class);
 
-  private MailService mailService;
-  private EmailSubscribers emailSubscribers;
   private TailingService tailingService;
-  private SocketController socketController;
+  private MyMessageHandler myMessageHandler;
   private HeartBeatChecker heartBeatChecker;
 
 
   @Value("${logfile.url}")
   private String path;
 
-  public TailingController(MailService mailService, EmailSubscribers emailSubscribers,
-      TailingService tailingService, SocketController socketController,
+  public TailingController(
+      TailingService tailingService, MyMessageHandler myMessageHandler,
       HeartBeatChecker heartBeatChecker) {
-    this.mailService = mailService;
-    this.emailSubscribers = emailSubscribers;
     this.tailingService = tailingService;
-    this.socketController = socketController;
     this.heartBeatChecker = heartBeatChecker;
-    socketController.start();
+    this.myMessageHandler = myMessageHandler;
+    myMessageHandler.connect();
   }
 
   public void startPingService() {
@@ -45,7 +39,7 @@ public class TailingController implements TailerServiceListener {
         System.out.println(heartBeatChecker.getPuls());
         update(String.valueOf(heartBeatChecker.getPuls()));
         try {
-          Thread.sleep(30000);
+          Thread.sleep(10000);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
@@ -63,7 +57,7 @@ public class TailingController implements TailerServiceListener {
   @Override
   public void update(String s) {
     LOGGER.info("NEW LOG FOUND - " + s);
-    socketController.sendLog(s);
+    myMessageHandler.sendMessage(s);
     LOGGER.info("WAITING...");
   }
 }

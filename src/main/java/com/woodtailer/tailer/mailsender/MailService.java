@@ -14,7 +14,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-@Service
+
 public class MailService {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MailService.class);
