@@ -24,7 +24,7 @@ public class ApplicationEndpointService {
 
   @PostMapping(path = "/application/tailer/starter")
   public ResponseEntity<StartApplicationResonse> startTailer() {
-    return ResponseEntity.ok(endpointHandler.startTaling());
+    return ResponseEntity.ok(endpointHandler.startTailing());
   }
 
   @PostMapping(path = "/application/heartbeat/starter")
