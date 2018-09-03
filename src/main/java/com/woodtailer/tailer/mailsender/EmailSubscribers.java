@@ -10,7 +10,6 @@ public class EmailSubscribers {
   private List<String> addresses = new ArrayList<>();
 
   private EmailSubscribers() {
-
   }
 
   public List<String> getAddresses() {

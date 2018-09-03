@@ -5,6 +5,7 @@ import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,28 +13,36 @@ public class TailingService implements TailerListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TailingService.class);
 
+  Tailer tailer;
+
+  @Value("${logfile.url}")
+  private String path;
+
   private TailerServiceListener tailerServiceListener;
 
   public void setTailerServiceListener(TailerServiceListener tailerServiceListener) {
     this.tailerServiceListener = tailerServiceListener;
   }
 
-  public void run(String filePath) {
+  public void start() {
 
     Thread tailerService = new Thread(() -> {
-      Tailer tailer = new Tailer(new File(filePath), this);
+      tailer = new Tailer(new File(path), this);
+      tailer.run();
       File file = tailer.getFile();
-
-      if (file.exists()) {
-        tailer.run();
-      } else {
+      if (!file.exists()) {
         LOGGER.error("FILE NOT FOUND");
       }
-
     });
 
     tailerService.start();
-    LOGGER.info("TALINGSERVICE STARTED...");
+  }
+
+  public void stop() {
+    LOGGER.info("STOPPED!");
+    if (tailer != null) {
+      tailer.stop();
+    }
   }
 
   @Override

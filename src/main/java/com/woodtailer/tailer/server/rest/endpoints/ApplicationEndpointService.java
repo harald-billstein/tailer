@@ -11,14 +11,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @RequestMapping(path = "/v1")
-public class ApplicationServiceStarterEndpoint {
+public class ApplicationEndpointService {
 
   private static final Logger LOGGER = LoggerFactory
-      .getLogger(ApplicationServiceStarterEndpoint.class);
+      .getLogger(ApplicationEndpointService.class);
 
   private EndpointHandler endpointHandler;
 
-  public ApplicationServiceStarterEndpoint(EndpointHandler endpointHandler) {
+  public ApplicationEndpointService(EndpointHandler endpointHandler) {
     this.endpointHandler = endpointHandler;
   }
 
@@ -30,6 +30,20 @@ public class ApplicationServiceStarterEndpoint {
   @PostMapping(path = "/application/heartbeat/starter")
   public ResponseEntity<StartApplicationResonse> startHeartbeat() {
     return ResponseEntity.ok(endpointHandler.startHeartbeat());
+  }
+
+
+  @PostMapping(path = "/application/tailer/stop")
+  public ResponseEntity<String> stopTailer() {
+    endpointHandler.stopTailing();
+    return ResponseEntity.ok("done");
+  }
+
+
+  @PostMapping(path = "/application/heartbeat/stop")
+  public ResponseEntity<String> stopHeartbeat() {
+    endpointHandler.stopHeartBet();
+    return ResponseEntity.ok("done");
   }
 
 }

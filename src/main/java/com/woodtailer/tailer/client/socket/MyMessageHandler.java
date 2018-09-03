@@ -3,9 +3,11 @@ package com.woodtailer.tailer.client.socket;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.PongMessage;
 import org.springframework.web.socket.TextMessage;
@@ -30,13 +32,15 @@ public class MyMessageHandler extends TextWebSocketHandler {
   public MyMessageHandler() {
   }
 
-  public void connect() {
+  public WebSocketSession connect() throws ExecutionException, InterruptedException {
     List<Transport> transports = new ArrayList<>(2);
     transports.add(new WebSocketTransport(new StandardWebSocketClient()));
     transports.add(new RestTemplateXhrTransport());
 
     SockJsClient sockJsClient = new SockJsClient(transports);
-    sockJsClient.doHandshake(this, URL);
+    ListenableFuture<WebSocketSession> session = sockJsClient.doHandshake(this, URL);
+
+    return session.get();
   }
 
   @Override
@@ -48,7 +52,7 @@ public class MyMessageHandler extends TextWebSocketHandler {
   @Override
   public void handleMessage(WebSocketSession session, WebSocketMessage<?> message)
       throws Exception {
-    LOGGER.info("handleMessage");
+    //LOGGER.info("handleMessage");
   }
 
   @Override
@@ -81,14 +85,17 @@ public class MyMessageHandler extends TextWebSocketHandler {
     boolean success;
 
     try {
-      session.sendMessage(new TextMessage(message));
-      success = true;
+      if (session.isOpen()) {
+        session.sendMessage(new TextMessage(message));
+        success = true;
+      } else {
+        success = false;
+      }
     } catch (IOException e) {
       e.printStackTrace();
       success = false;
     }
     return success;
   }
-
 
 }
