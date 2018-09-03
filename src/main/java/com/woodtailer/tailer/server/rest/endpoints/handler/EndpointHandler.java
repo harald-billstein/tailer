@@ -25,17 +25,10 @@ public class EndpointHandler {
     return startApplicationResonse;
   }
 
-  public StartApplicationResonse startTaling() {
-    LOGGER.info("APPLICATION STARTED...");
-    //TODO CHECK SO APP STARTED
-
-    if (mainController.isPingServiceRunning()) {
-
-    }
-
+  public StartApplicationResonse startTailing() {
     mainController.startTailingService();
     StartApplicationResonse startApplicationResonse = new StartApplicationResonse();
-    startApplicationResonse.setApplicationStarted(true);
+    startApplicationResonse.setApplicationStarted(mainController.isTailsingServerRunning());
     return startApplicationResonse;
   }
 
