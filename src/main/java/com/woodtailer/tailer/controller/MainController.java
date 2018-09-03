@@ -63,15 +63,16 @@ public class MainController implements TailerServiceListener {
 
   public void startTailingService() {
 
-    if (session.isOpen()) {
+    if (session.isOpen() && !isTailsingServerRunning) {
       tailingService.setTailerServiceListener(this);
-
+      isTailsingServerRunning = true;
       tailingService.start();
       LOGGER.info("TAILING SERVICE STARTED");
-    } else {
-      LOGGER.warn("TALING SERVICE FAILED TO START.....RESTARTING");
+    } else if (!session.isOpen()) {
+      LOGGER.warn("TAILING SERVICE : SOCKET SERVER DOWN");
       startSocket();
-      startTailingService();
+    } else if (isTailsingServerRunning) {
+      LOGGER.info("TAILING SERVICE ALREADY RUNNING...");
     }
   }
 
@@ -102,6 +103,7 @@ public class MainController implements TailerServiceListener {
 
   public void stopTalingService() {
     LOGGER.warn("STOPPING TALING SERVICE");
+    isTailsingServerRunning = false;
     tailingService.stop();
   }
 
