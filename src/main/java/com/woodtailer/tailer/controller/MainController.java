@@ -1,7 +1,7 @@
 package com.woodtailer.tailer.controller;
 
 import com.woodtailer.tailer.client.socket.MyMessageHandler;
-import com.woodtailer.tailer.heartbeat.HeartBeatChecker;
+import com.woodtailer.tailer.pulse.PulseChecker;
 import com.woodtailer.tailer.tailing.TailerServiceListener;
 import com.woodtailer.tailer.tailing.TailingService;
 import java.util.concurrent.ExecutionException;
@@ -20,100 +20,108 @@ public class MainController implements TailerServiceListener {
   private static final int THREAD_SLEEP_DEFAULT_TIME = 10000;
 
   @Getter
-  private boolean isSocketOnline;
+  private boolean isPulseServiceRunning;
   @Getter
-  private boolean isPingServiceRunning;
-  @Getter
-  private boolean isTailsingServerRunning;
+  private boolean isTailingServerRunning;
 
   private WebSocketSession session;
 
   private TailingService tailingService;
   private MyMessageHandler myMessageHandler;
-  private HeartBeatChecker heartBeatChecker;
+  private PulseChecker heartBeatChecker;
+
+  private Thread pulseThread;
 
   @Value("${logfile.url}")
   private String path;
 
   public MainController(
       TailingService tailingService, MyMessageHandler myMessageHandler,
-      HeartBeatChecker heartBeatChecker) {
+      PulseChecker heartBeatChecker) {
     this.tailingService = tailingService;
     this.heartBeatChecker = heartBeatChecker;
     this.myMessageHandler = myMessageHandler;
+    init();
+  }
+
+  private void init() {
+    tailingService.setTailerServiceListener(this);
     startSocket();
   }
 
-  private void startSocket() {
+  public void initPulseService() {
+    LOGGER.info("INIT PULSE THREAD");
 
-    while (true) {
+    pulseThread = new Thread(() -> {
 
-      try {
-        session = myMessageHandler.connect();
-        LOGGER.info("CONNECTION SUCCESS");
-        break;
-      } catch (ExecutionException | InterruptedException e1) {
-        LOGGER.error(
-            "CONNECTION FAILED - RECONNECT IN " + (THREAD_SLEEP_DEFAULT_TIME / 1000) + " SECONDS");
-        threadSleep();
-      }
-    }
-    isSocketOnline = session.isOpen();
-  }
-
-  public void startTailingService() {
-
-    if (session.isOpen() && !isTailsingServerRunning) {
-      tailingService.setTailerServiceListener(this);
-      isTailsingServerRunning = true;
-      tailingService.start();
-      LOGGER.info("TAILING SERVICE STARTED");
-    } else if (!session.isOpen()) {
-      LOGGER.warn("TAILING SERVICE : SOCKET SERVER DOWN");
-      startSocket();
-    } else if (isTailsingServerRunning) {
-      LOGGER.info("TAILING SERVICE ALREADY RUNNING...");
-    }
-  }
-
-  public void startPingService() {
-    isPingServiceRunning = true;
-
-    new Thread(() -> {
-      LOGGER.info("PING SERVICE STARTED");
-      while (session.isOpen() && isPingServiceRunning) {
-
-        if (heartBeatChecker.getPuls()) {
-          update("PULS");
-        }
+      while (session.isOpen() && isPulseServiceRunning) {
 
         try {
           Thread.sleep(10000);
         } catch (InterruptedException e) {
           e.printStackTrace();
         }
-      }
-      LOGGER.info("HEARTBEAT STOPPED");
-      //startSocket();
-      //startPingService();
-    }
 
-    ).start();
+        if (heartBeatChecker.getPuls()) {
+          update("PULS");
+        }
+      }
+      LOGGER.info("PULSE THREAD STOPPED");
+    }
+    );
   }
 
-  public void stopTalingService() {
-    LOGGER.warn("STOPPING TALING SERVICE");
-    isTailsingServerRunning = false;
+  public void startSocket() {
+    boolean isSocketOnline = false;
+
+    while (!isSocketOnline) {
+      try {
+        session = myMessageHandler.connect();
+        isSocketOnline = session.isOpen();
+        LOGGER.info("CONNECTION SUCCESS");
+      } catch (ExecutionException | InterruptedException e1) {
+        LOGGER.error(
+            "CONNECTION FAILED - RECONNECT IN " + (THREAD_SLEEP_DEFAULT_TIME / 1000)
+                + " SECONDS");
+        threadSleep();
+      }
+    }
+  }
+
+  public void startTailingService() {
+
+    if (session.isOpen()) {
+      tailingService.start();
+      isTailingServerRunning = true;
+      LOGGER.info("TAILING SERVICE STARTED");
+    } else if (!session.isOpen()) {
+      LOGGER.warn("TAILING SERVICE : SOCKET SERVER DOWN");
+    }
+  }
+
+
+  public void stopTailingService() {
+    LOGGER.warn("STOPPING TAILING SERVICE");
+    isTailingServerRunning = false;
     tailingService.stop();
   }
 
-  public void stopPingService() {
-    LOGGER.warn("STOPPING PING SERVICE");
-    isPingServiceRunning = false;
+  public void startPulseService() {
+    if (!isPulseServiceRunning) {
+      isPulseServiceRunning = true;
+      initPulseService();
+      pulseThread.start();
+    }
+  }
+
+  public void stopPulseService() {
+    LOGGER.warn("STOPPING PULSE SERVICE");
+    isPulseServiceRunning = false;
   }
 
   @Override
   public void update(String s) {
+    LOGGER.info("ACTIVE THREADS : " + Thread.activeCount());
 
     if (s.equals("PULS")) {
       LOGGER.info("PULS DETECTED");
@@ -125,11 +133,12 @@ public class MainController implements TailerServiceListener {
       myMessageHandler.sendMessage(s);
     } else {
       LOGGER.info("SOCKET OFFLINE");
-      stopPingService();
-      stopTalingService();
+      stopPulseService();
+      stopTailingService();
     }
     LOGGER.info("WAITING...");
   }
+
 
   private void threadSleep() {
     try {

@@ -1,4 +1,4 @@
-package com.woodtailer.tailer.heartbeat;
+package com.woodtailer.tailer.pulse;
 
 import com.woodtailer.tailer.enums.RestMethods;
 import java.net.HttpURLConnection;
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HeartBeatChecker {
+public class PulseChecker {
 
 
   @Value("${heartbeat.url}")

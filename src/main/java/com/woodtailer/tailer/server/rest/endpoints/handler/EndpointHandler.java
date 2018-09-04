@@ -1,9 +1,10 @@
 package com.woodtailer.tailer.server.rest.endpoints.handler;
 
 import com.woodtailer.tailer.controller.MainController;
-import com.woodtailer.tailer.server.rest.response.StartApplicationResonse;
+import com.woodtailer.tailer.server.rest.response.ServiceResonse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -17,27 +18,36 @@ public class EndpointHandler {
     this.mainController = mainController;
   }
 
-  public StartApplicationResonse startHeartbeat() {
+  public ResponseEntity<ServiceResonse> startHeartbeat() {
 
-    mainController.startPingService();
-    StartApplicationResonse startApplicationResonse = new StartApplicationResonse();
-    startApplicationResonse.setApplicationStarted(true);
-    return startApplicationResonse;
+    mainController.startPulseService();
+    ServiceResonse serviceResonse = new ServiceResonse();
+    serviceResonse.setServiceStarted(mainController.isPulseServiceRunning());
+    serviceResonse.setServiceName("Pulse service");
+    return ResponseEntity.ok(serviceResonse);
   }
 
-  public StartApplicationResonse startTailing() {
+  public ResponseEntity<ServiceResonse> startTailing() {
     mainController.startTailingService();
-    StartApplicationResonse startApplicationResonse = new StartApplicationResonse();
-    startApplicationResonse.setApplicationStarted(mainController.isTailsingServerRunning());
-    return startApplicationResonse;
+    ServiceResonse serviceResonse = new ServiceResonse();
+    serviceResonse.setServiceStarted(mainController.isTailingServerRunning());
+    serviceResonse.setServiceName("Tailing service");
+    return ResponseEntity.ok(serviceResonse);
   }
 
-  public void stopHeartBet() {
-    mainController.stopPingService();
+  public ResponseEntity<ServiceResonse> stopHeartBeat() {
+    ServiceResonse serviceResonse = new ServiceResonse();
+    serviceResonse.setServiceStarted(mainController.isPulseServiceRunning());
+    serviceResonse.setServiceName("Pulse service");
+    mainController.stopPulseService();
+    return ResponseEntity.ok(serviceResonse);
   }
 
-  public void stopTailing() {
-    mainController.stopTalingService();
-
+  public ResponseEntity<ServiceResonse> stopTailing() {
+    ServiceResonse serviceResonse = new ServiceResonse();
+    serviceResonse.setServiceStarted(mainController.isTailingServerRunning());
+    serviceResonse.setServiceName("Tailing service");
+    mainController.stopTailingService();
+    return ResponseEntity.ok(serviceResonse);
   }
 }

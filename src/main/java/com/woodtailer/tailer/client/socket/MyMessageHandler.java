@@ -1,5 +1,6 @@
 package com.woodtailer.tailer.client.socket;
 
+import com.woodtailer.tailer.controller.MainController;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class MyMessageHandler extends TextWebSocketHandler {
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
     this.session = session;
-    LOGGER.info("Sending hello from Tailer");
+    LOGGER.info("TAILER CONNECTED");
   }
 
   @Override
@@ -73,6 +74,7 @@ public class MyMessageHandler extends TextWebSocketHandler {
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
     LOGGER.info("afterConnectionClosed");
+    session.close();
   }
 
   @Override

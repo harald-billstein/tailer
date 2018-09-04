@@ -1,7 +1,7 @@
 package com.woodtailer.tailer.server.rest.endpoints;
 
 import com.woodtailer.tailer.server.rest.endpoints.handler.EndpointHandler;
-import com.woodtailer.tailer.server.rest.response.StartApplicationResonse;
+import com.woodtailer.tailer.server.rest.response.ServiceResonse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -23,27 +23,24 @@ public class ApplicationEndpointService {
   }
 
   @PostMapping(path = "/application/tailer/starter")
-  public ResponseEntity<StartApplicationResonse> startTailer() {
-    return ResponseEntity.ok(endpointHandler.startTailing());
+  public ResponseEntity<ServiceResonse> startTailer() {
+    return endpointHandler.startTailing();
   }
 
   @PostMapping(path = "/application/heartbeat/starter")
-  public ResponseEntity<StartApplicationResonse> startHeartbeat() {
-    return ResponseEntity.ok(endpointHandler.startHeartbeat());
+  public ResponseEntity<ServiceResonse> startHeartbeat() {
+    return endpointHandler.startHeartbeat();
   }
-
 
   @PostMapping(path = "/application/tailer/stop")
-  public ResponseEntity<String> stopTailer() {
-    endpointHandler.stopTailing();
-    return ResponseEntity.ok("done");
+  public ResponseEntity<ServiceResonse> stopTailer() {
+    return endpointHandler.stopTailing();
+
   }
 
-
   @PostMapping(path = "/application/heartbeat/stop")
-  public ResponseEntity<String> stopHeartbeat() {
-    endpointHandler.stopHeartBeat();
-    return ResponseEntity.ok("done");
+  public ResponseEntity<ServiceResonse> stopHeartbeat() {
+    return endpointHandler.stopHeartBeat();
   }
 
 }
