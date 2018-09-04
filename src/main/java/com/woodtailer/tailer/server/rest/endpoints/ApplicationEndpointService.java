@@ -42,7 +42,7 @@ public class ApplicationEndpointService {
 
   @PostMapping(path = "/application/heartbeat/stop")
   public ResponseEntity<String> stopHeartbeat() {
-    endpointHandler.stopHeartBet();
+    endpointHandler.stopHeartBeat();
     return ResponseEntity.ok("done");
   }
 
