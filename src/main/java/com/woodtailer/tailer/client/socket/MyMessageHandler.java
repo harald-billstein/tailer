@@ -1,6 +1,5 @@
 package com.woodtailer.tailer.client.socket;
 
-import com.woodtailer.tailer.controller.MainController;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,27 +26,28 @@ public class MyMessageHandler extends TextWebSocketHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MyMessageHandler.class);
 
+  private MyMessageHandlerListener myMessageHandlerListener;
   private WebSocketSession session;
   private String URL = "http://localhost:8080/gs-guide-websocket";
 
   public MyMessageHandler() {
   }
 
-  public WebSocketSession connect() throws ExecutionException, InterruptedException {
+  public void connect() throws ExecutionException, InterruptedException {
     List<Transport> transports = new ArrayList<>(2);
     transports.add(new WebSocketTransport(new StandardWebSocketClient()));
     transports.add(new RestTemplateXhrTransport());
 
     SockJsClient sockJsClient = new SockJsClient(transports);
     ListenableFuture<WebSocketSession> session = sockJsClient.doHandshake(this, URL);
-
-    return session.get();
+    this.session = session.get();
   }
 
   @Override
   public void afterConnectionEstablished(WebSocketSession session) throws Exception {
     this.session = session;
     LOGGER.info("TAILER CONNECTED");
+    myMessageHandlerListener.status("afterConnectionEstablished");
   }
 
   @Override
@@ -75,6 +75,7 @@ public class MyMessageHandler extends TextWebSocketHandler {
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
     LOGGER.info("afterConnectionClosed");
     session.close();
+    myMessageHandlerListener.status("afterConnectionClosed");
   }
 
   @Override
@@ -100,4 +101,16 @@ public class MyMessageHandler extends TextWebSocketHandler {
     return success;
   }
 
+  public boolean isSessionOpen() {
+    if (session == null) {
+      return false;
+    } else {
+      return session.isOpen();
+    }
+  }
+
+  public void setMyMessageHandlerListener(
+      MyMessageHandlerListener myMessageHandlerListener) {
+    this.myMessageHandlerListener = myMessageHandlerListener;
+  }
 }

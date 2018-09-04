@@ -1,6 +1,7 @@
 package com.woodtailer.tailer.controller;
 
 import com.woodtailer.tailer.client.socket.MyMessageHandler;
+import com.woodtailer.tailer.client.socket.MyMessageHandlerListener;
 import com.woodtailer.tailer.pulse.PulseChecker;
 import com.woodtailer.tailer.tailing.TailerServiceListener;
 import com.woodtailer.tailer.tailing.TailingService;
@@ -10,11 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.socket.WebSocketSession;
 
 
 @Controller
-public class MainController implements TailerServiceListener {
+public class MainController implements TailerServiceListener, MyMessageHandlerListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
   private static final int THREAD_SLEEP_DEFAULT_TIME = 10000;
@@ -23,8 +23,6 @@ public class MainController implements TailerServiceListener {
   private boolean isPulseServiceRunning;
   @Getter
   private boolean isTailingServerRunning;
-
-  private WebSocketSession session;
 
   private TailingService tailingService;
   private MyMessageHandler myMessageHandler;
@@ -45,7 +43,9 @@ public class MainController implements TailerServiceListener {
   }
 
   private void init() {
+    myMessageHandler.setMyMessageHandlerListener(this);
     tailingService.setTailerServiceListener(this);
+
     startSocket();
   }
 
@@ -54,7 +54,7 @@ public class MainController implements TailerServiceListener {
 
     pulseThread = new Thread(() -> {
 
-      while (session.isOpen() && isPulseServiceRunning) {
+      while (myMessageHandler.isSessionOpen() && isPulseServiceRunning) {
 
         try {
           Thread.sleep(10000);
@@ -76,8 +76,8 @@ public class MainController implements TailerServiceListener {
 
     while (!isSocketOnline) {
       try {
-        session = myMessageHandler.connect();
-        isSocketOnline = session.isOpen();
+        myMessageHandler.connect();
+        isSocketOnline = myMessageHandler.isSessionOpen();
         LOGGER.info("CONNECTION SUCCESS");
       } catch (ExecutionException | InterruptedException e1) {
         LOGGER.error(
@@ -90,11 +90,11 @@ public class MainController implements TailerServiceListener {
 
   public void startTailingService() {
 
-    if (session.isOpen()) {
+    if (myMessageHandler.isSessionOpen()) {
       tailingService.start();
       isTailingServerRunning = true;
       LOGGER.info("TAILING SERVICE STARTED");
-    } else if (!session.isOpen()) {
+    } else if (!myMessageHandler.isSessionOpen()) {
       LOGGER.warn("TAILING SERVICE : SOCKET SERVER DOWN");
     }
   }
@@ -129,12 +129,8 @@ public class MainController implements TailerServiceListener {
       LOGGER.info("NEW LOG FOUND - " + s);
     }
 
-    if (session.isOpen()) {
+    if (myMessageHandler.isSessionOpen()) {
       myMessageHandler.sendMessage(s);
-    } else {
-      LOGGER.info("SOCKET OFFLINE");
-      stopPulseService();
-      stopTailingService();
     }
     LOGGER.info("WAITING...");
   }
@@ -146,5 +142,19 @@ public class MainController implements TailerServiceListener {
     } catch (InterruptedException e) {
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public void status(String s) {
+
+    if (s.equals("afterConnectionEstablished")) {
+      startTailingService();
+      startPulseService();
+    } else if (s.equals("afterConnectionClosed")) {
+      stopPulseService();
+      stopTailingService();
+      startSocket();
+    }
+
   }
 }
