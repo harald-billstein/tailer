@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 public class PulseChecker {
 
 
-  @Value("${heartbeat.url}")
+  @Value("${pulse.url}")
   private URL url;
 
   public boolean getPuls() {
