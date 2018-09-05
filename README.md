@@ -1,4 +1,4 @@
-## Tailer - An application monitor
+## Tailer - An application monitor [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)&nbsp;[![forthebadge](https://forthebadge.com/images/badges/powered-by-electricity.svg)](https://forthebadge.com)
 
 Tailer monitors a log file. For each new row entered in the log file the application will be picked up and sent to a socket server (see separate git repo). The socket server will then distribute the message to all its subscribers (plugins).
 <br>
@@ -19,7 +19,6 @@ I was looking for a way to update a web view instantly, to push updates. The sol
 
 
 ## Tech/framework used
-Ex. -
 
 <b>Built with</b>
 - [SpringBoot](https://spring.io/projects/spring-boot)
@@ -32,10 +31,10 @@ Ex. -
 `2. Fill out logfile.url for the application to monitor.`<br>
 `3. Fill out pulse.url (recommended).`<br>
 `4. Optional communication port.`<br>
-`5. Compile using Maven`
+`5. Compile using Maven`<br>
 `6. Run in terminal using: java -jar tailer-0.0.1-SNAPSHOT.jar `
 
 ## Contribute
 
-Want to help? send me a message.
+Want to help? send me a message. <br> **`Harald.billstein@gmail.com`**
 
