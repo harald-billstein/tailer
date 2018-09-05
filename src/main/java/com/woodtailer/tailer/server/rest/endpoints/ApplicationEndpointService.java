@@ -1,7 +1,6 @@
 package com.woodtailer.tailer.server.rest.endpoints;
 
-import com.woodtailer.tailer.server.rest.endpoints.handler.EndpointHandler;
-import com.woodtailer.tailer.server.rest.response.ServiceResonse;
+import com.woodtailer.tailer.controller.EndpointHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +15,7 @@ public class ApplicationEndpointService {
   private static final Logger LOGGER = LoggerFactory
       .getLogger(ApplicationEndpointService.class);
 
-  private EndpointHandler endpointHandler;
+  private final EndpointHandler endpointHandler;
 
   public ApplicationEndpointService(EndpointHandler endpointHandler) {
     this.endpointHandler = endpointHandler;

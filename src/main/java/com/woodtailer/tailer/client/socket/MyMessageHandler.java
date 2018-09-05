@@ -25,10 +25,9 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 public class MyMessageHandler extends TextWebSocketHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MyMessageHandler.class);
-
+  private final String URL = "http://localhost:8080/gs-guide-websocket";
   private MyMessageHandlerListener myMessageHandlerListener;
   private WebSocketSession session;
-  private String URL = "http://localhost:8080/gs-guide-websocket";
 
   public MyMessageHandler() {
   }

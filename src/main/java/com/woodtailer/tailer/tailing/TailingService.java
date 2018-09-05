@@ -13,7 +13,7 @@ public class TailingService implements TailerListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(TailingService.class);
 
-  Tailer tailer;
+  private Tailer tailer;
 
   @Value("${logfile.url}")
   private String path;

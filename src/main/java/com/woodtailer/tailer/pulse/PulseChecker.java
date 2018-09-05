@@ -1,6 +1,5 @@
 package com.woodtailer.tailer.pulse;
 
-import com.woodtailer.tailer.enums.RestMethods;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,7 +16,7 @@ public class PulseChecker {
 
     try {
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-      connection.setRequestMethod(RestMethods.GET.method());
+      connection.setRequestMethod("GET");
       connection.setRequestProperty("Accept", "application/json");
       return connection.getResponseCode() == 200;
 

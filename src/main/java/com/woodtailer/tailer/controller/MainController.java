@@ -24,9 +24,9 @@ public class MainController implements TailerServiceListener, MyMessageHandlerLi
   @Getter
   private boolean isTailingServerRunning;
 
-  private TailingService tailingService;
-  private MyMessageHandler myMessageHandler;
-  private PulseChecker heartBeatChecker;
+  private final TailingService tailingService;
+  private final MyMessageHandler myMessageHandler;
+  private final PulseChecker heartBeatChecker;
 
   private Thread pulseThread;
 
@@ -39,17 +39,15 @@ public class MainController implements TailerServiceListener, MyMessageHandlerLi
     this.tailingService = tailingService;
     this.heartBeatChecker = heartBeatChecker;
     this.myMessageHandler = myMessageHandler;
-    init();
   }
 
-  private void init() {
+  public void startMainController() {
     myMessageHandler.setMyMessageHandlerListener(this);
     tailingService.setTailerServiceListener(this);
-
     startSocket();
   }
 
-  public void initPulseService() {
+  private void initPulseService() {
     LOGGER.info("INIT PULSE THREAD");
 
     pulseThread = new Thread(() -> {
@@ -71,7 +69,7 @@ public class MainController implements TailerServiceListener, MyMessageHandlerLi
     );
   }
 
-  public void startSocket() {
+  private void startSocket() {
     boolean isSocketOnline = false;
 
     while (!isSocketOnline) {
@@ -88,7 +86,7 @@ public class MainController implements TailerServiceListener, MyMessageHandlerLi
     }
   }
 
-  public void startTailingService() {
+  protected void startTailingService() {
 
     if (myMessageHandler.isSessionOpen()) {
       tailingService.start();
@@ -99,14 +97,13 @@ public class MainController implements TailerServiceListener, MyMessageHandlerLi
     }
   }
 
-
-  public void stopTailingService() {
+  protected void stopTailingService() {
     LOGGER.warn("STOPPING TAILING SERVICE");
     isTailingServerRunning = false;
     tailingService.stop();
   }
 
-  public void startPulseService() {
+  protected void startPulseService() {
     if (!isPulseServiceRunning) {
       isPulseServiceRunning = true;
       initPulseService();
@@ -134,7 +131,6 @@ public class MainController implements TailerServiceListener, MyMessageHandlerLi
     }
     LOGGER.info("WAITING...");
   }
-
 
   private void threadSleep() {
     try {
