@@ -1,5 +1,6 @@
-## Tailer - An application monitor [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)&nbsp;[![forthebadge](https://forthebadge.com/images/badges/powered-by-electricity.svg)](https://forthebadge.com)
-
+[![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)&nbsp;[![forthebadge](https://forthebadge.com/images/badges/powered-by-electricity.svg)](https://forthebadge.com)
+<br>
+## Tailer - An application monitor 
 Tailer monitors a log file. For each new row entered in the log file the application will be picked up and sent to a socket server (see separate git repo). The socket server will then distribute the message to all its subscribers (plugins).
 <br>
 <br>
