@@ -2,7 +2,8 @@ package com.woodtailer.tailer.controller;
 
 import com.woodtailer.tailer.client.socket.MyMessageHandler;
 import com.woodtailer.tailer.client.socket.MyMessageHandlerListener;
-import com.woodtailer.tailer.pulse.PulseChecker;
+import com.woodtailer.tailer.pulse.PulseCheckerListener;
+import com.woodtailer.tailer.pulse.PulseCheckerService;
 import com.woodtailer.tailer.tailing.TailerServiceListener;
 import com.woodtailer.tailer.tailing.TailingService;
 import java.util.concurrent.ExecutionException;
@@ -14,122 +15,93 @@ import org.springframework.stereotype.Controller;
 
 
 @Controller
-public class MainController implements TailerServiceListener, MyMessageHandlerListener {
+public class MainController implements TailerServiceListener, MyMessageHandlerListener,
+    PulseCheckerListener {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MainController.class);
   private static final int THREAD_SLEEP_DEFAULT_TIME = 10000;
+  private final TailingService tailingService;
+  private final MyMessageHandler myMessageHandler;
+  private PulseCheckerService pulseChecker;
 
+  private boolean isSocketOnline;
   @Getter
   private boolean isPulseServiceRunning;
   @Getter
   private boolean isTailingServerRunning;
-
-  private final TailingService tailingService;
-  private final MyMessageHandler myMessageHandler;
-  private final PulseChecker heartBeatChecker;
-
-  private Thread pulseThread;
 
   @Value("${logfile.url}")
   private String path;
 
   public MainController(
       TailingService tailingService, MyMessageHandler myMessageHandler,
-      PulseChecker heartBeatChecker) {
+      PulseCheckerService pulseChecker) {
     this.tailingService = tailingService;
-    this.heartBeatChecker = heartBeatChecker;
+    this.pulseChecker = pulseChecker;
     this.myMessageHandler = myMessageHandler;
   }
 
   public void startMainController() {
     myMessageHandler.setMyMessageHandlerListener(this);
     tailingService.setTailerServiceListener(this);
+    pulseChecker.setListener(this);
     startSocket();
-  }
 
-  private void initPulseService() {
-    LOGGER.info("INIT PULSE THREAD");
+    Thread pulseCheckerThread = new Thread(pulseChecker);
+    pulseCheckerThread.start();
 
-    pulseThread = new Thread(() -> {
-
-      while (myMessageHandler.isSessionOpen() && isPulseServiceRunning) {
-
-        try {
-          Thread.sleep(10000);
-        } catch (InterruptedException e) {
-          e.printStackTrace();
-        }
-
-        if (heartBeatChecker.getPuls()) {
-          update("PULS");
-        }
-      }
-      LOGGER.info("PULSE THREAD STOPPED");
-    }
-    );
   }
 
   private void startSocket() {
-    boolean isSocketOnline = false;
+    LOGGER.info("STARTING SOCKET...");
 
     while (!isSocketOnline) {
       try {
+        isSocketOnline = true;
         myMessageHandler.connect();
-        isSocketOnline = myMessageHandler.isSessionOpen();
-        LOGGER.info("CONNECTION SUCCESS");
+        LOGGER.info("SOCKET - ONLINE");
       } catch (ExecutionException | InterruptedException e1) {
         LOGGER.error(
-            "CONNECTION FAILED - RECONNECT IN " + (THREAD_SLEEP_DEFAULT_TIME / 1000)
+            "SOCKET OFFLINE - RECONNECT IN " + (THREAD_SLEEP_DEFAULT_TIME / 1000)
                 + " SECONDS");
+        isSocketOnline = false;
         threadSleep();
       }
     }
   }
 
   protected void startTailingService() {
+    LOGGER.info("START TAILING");
 
-    if (myMessageHandler.isSessionOpen()) {
-      tailingService.start();
+    if (isSocketOnline && !isTailingServerRunning) {
       isTailingServerRunning = true;
-      LOGGER.info("TAILING SERVICE STARTED");
-    } else if (!myMessageHandler.isSessionOpen()) {
-      LOGGER.warn("TAILING SERVICE : SOCKET SERVER DOWN");
+      tailingService.start();
+    } else if (!isSocketOnline) {
+      LOGGER.warn("START TAILING : SOCKET SERVER DOWN");
     }
   }
 
   protected void stopTailingService() {
-    LOGGER.warn("STOPPING TAILING SERVICE");
+    LOGGER.warn("STOPPING TAILING");
     isTailingServerRunning = false;
     tailingService.stop();
   }
 
   protected void startPulseService() {
-    if (!isPulseServiceRunning) {
+    LOGGER.info("STARTING PULSE");
+
+    if (!isPulseServiceRunning && isSocketOnline) {
       isPulseServiceRunning = true;
-      initPulseService();
-      pulseThread.start();
+      pulseChecker.startPulse();
+    } else if (!isSocketOnline) {
+      LOGGER.warn("STARTING PULSE - SOCKET OFFLINE");
     }
   }
 
   public void stopPulseService() {
-    LOGGER.warn("STOPPING PULSE SERVICE");
+    LOGGER.warn("STOPPING PULSE");
+    pulseChecker.stopPulse();
     isPulseServiceRunning = false;
-  }
-
-  @Override
-  public void update(String s) {
-    LOGGER.info("ACTIVE THREADS : " + Thread.activeCount());
-
-    if (s.equals("PULS")) {
-      LOGGER.info("PULS DETECTED");
-    } else {
-      LOGGER.info("NEW LOG FOUND - " + s);
-    }
-
-    if (myMessageHandler.isSessionOpen()) {
-      myMessageHandler.sendMessage(s);
-    }
-    LOGGER.info("WAITING...");
   }
 
   private void threadSleep() {
@@ -141,16 +113,35 @@ public class MainController implements TailerServiceListener, MyMessageHandlerLi
   }
 
   @Override
+  public void update(String s) {
+    if (isSocketOnline) {
+      LOGGER.info("DELIVERING MESSAGE : " + s);
+      myMessageHandler.sendMessage(s);
+    } else {
+      LOGGER.warn("SOCKET OFFLINE - MESSAGE NOT DELIVERED : " + s);
+    }
+  }
+
+  @Override
   public void status(String s) {
 
-    if (s.equals("afterConnectionEstablished")) {
-      startTailingService();
-      startPulseService();
-    } else if (s.equals("afterConnectionClosed")) {
+    if (s.equals("afterConnectionClosed")) {
       stopPulseService();
       stopTailingService();
+      isSocketOnline = false;
       startSocket();
+      startPulseService();
+      startTailingService();
     }
+  }
 
+  @Override
+  public void pulse(boolean pulse) {
+    if (isSocketOnline) {
+      LOGGER.info("DELIVERING : PULSE");
+      myMessageHandler.sendMessage("PULSE");
+    } else {
+      LOGGER.warn("SOCKET OFFLINE PULSE NOT DELIVERED");
+    }
   }
 }

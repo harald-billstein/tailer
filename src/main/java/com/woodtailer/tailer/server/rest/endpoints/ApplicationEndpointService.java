@@ -26,7 +26,7 @@ public class ApplicationEndpointService {
     return endpointHandler.startTailing();
   }
 
-  @PostMapping(path = "/application/heartbeat/starter")
+  @PostMapping(path = "/application/pulse/starter")
   public ResponseEntity<ServiceResonse> startHeartbeat() {
     return endpointHandler.startHeartbeat();
   }
@@ -37,7 +37,7 @@ public class ApplicationEndpointService {
 
   }
 
-  @PostMapping(path = "/application/heartbeat/stop")
+  @PostMapping(path = "/application/pulse/stop")
   public ResponseEntity<ServiceResonse> stopHeartbeat() {
     return endpointHandler.stopHeartBeat();
   }

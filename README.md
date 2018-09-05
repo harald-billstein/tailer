@@ -35,6 +35,24 @@ I was looking for a way to update a web view instantly, to push updates. The sol
 `5. Compile using Maven`<br>
 `6. Run in terminal using: java -jar tailer-0.0.1-SNAPSHOT.jar `
 
+## API functions
+
+**Start tailing:**<br>
+`Method: POST`<br>
+`url: /v1/application/tailer/starter`
+
+**Stop tailing:**<br>
+`Method: POST`<br>
+`url /v1/application/tailer/stop`
+
+**Start pulse:**<br>
+`Method: POST`<br>
+`url /v1/application/pulse/starter`
+
+**Stop pulse:**<br>
+`Method: POST`<br>
+`url /v1/application/pulse/stop`
+
 ## Contribute
 
 Want to help? send me a message. <br> **`Harald.billstein@gmail.com`**

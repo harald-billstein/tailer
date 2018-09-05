@@ -25,7 +25,7 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 public class MyMessageHandler extends TextWebSocketHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MyMessageHandler.class);
-  private final String URL = "http://localhost:8080/gs-guide-websocket";
+  private final String URL = "http://localhost:8080/websocket";
   private MyMessageHandlerListener myMessageHandlerListener;
   private WebSocketSession session;
 
@@ -101,11 +101,7 @@ public class MyMessageHandler extends TextWebSocketHandler {
   }
 
   public boolean isSessionOpen() {
-    if (session == null) {
-      return false;
-    } else {
-      return session.isOpen();
-    }
+    return session.isOpen();
   }
 
   public void setMyMessageHandlerListener(
