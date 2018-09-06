@@ -22,24 +22,24 @@ public class ApplicationEndpointService {
   }
 
   @PostMapping(path = "/application/tailer/starter")
-  public ResponseEntity<ServiceResonse> startTailer() {
+  public ResponseEntity<ServiceResponse> startTailer() {
     return endpointHandler.startTailing();
   }
 
   @PostMapping(path = "/application/pulse/starter")
-  public ResponseEntity<ServiceResonse> startHeartbeat() {
-    return endpointHandler.startHeartbeat();
+  public ResponseEntity<ServiceResponse> startHeartbeat() {
+    return endpointHandler.startPulse();
   }
 
   @PostMapping(path = "/application/tailer/stop")
-  public ResponseEntity<ServiceResonse> stopTailer() {
+  public ResponseEntity<ServiceResponse> stopTailer() {
     return endpointHandler.stopTailing();
 
   }
 
   @PostMapping(path = "/application/pulse/stop")
-  public ResponseEntity<ServiceResonse> stopHeartbeat() {
-    return endpointHandler.stopHeartBeat();
+  public ResponseEntity<ServiceResponse> stopHeartbeat() {
+    return endpointHandler.stopPulse();
   }
 
 }
