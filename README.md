@@ -7,7 +7,7 @@ Tailer monitors a log file. For each new row entered in the log file the applica
 Tailer can ask for a pulse (heartbeat) from the application. If this feature is activated, the application will send a pulse every 30 second, to the socket server. This can be used to see if the application that is producing the log file is up and running, good if no logs are being produced and you still want confirmation the application is up and running.
 
 **Server:<br>**
-Socket Server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
+Socket Server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https://github.com/harald-billstein/socketServer.git)&nbsp;(Coming soon)<br>
 
 **Available plugins:<br>**
 Email Alerter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
@@ -28,12 +28,14 @@ I was looking for a way to update a web view instantly, to push updates. The sol
 - [Intellij](https://www.jetbrains.com/idea/)
 
 ## Installation
+
+**Make sure Maven is installed!**
+
 `1. Open src/resources/application.properties.`<br>
 `2. Fill out logfile.url for the application to monitor.`<br>
 `3. Fill out pulse.url (recommended).`<br>
 `4. Optional communication port.`<br>
-`5. Compile using Maven`<br>
-`6. Run in terminal using: java -jar tailer-0.0.1-SNAPSHOT.jar `
+`5. got to file build.sh and type: sh build.sh`
 
 ## API functions
 
