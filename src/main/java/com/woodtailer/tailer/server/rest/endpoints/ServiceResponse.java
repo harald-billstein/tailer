@@ -3,9 +3,9 @@ package com.woodtailer.tailer.server.rest.endpoints;
 import lombok.Data;
 
 @Data
-public class ServiceResonse {
+public class ServiceResponse {
 
-  private boolean ServiceStarted;
+  private boolean ServiceRunning;
   private String serviceName;
 
 }
