@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 import org.springframework.web.socket.CloseStatus;
@@ -25,48 +26,45 @@ import org.springframework.web.socket.sockjs.client.WebSocketTransport;
 public class MyMessageHandler extends TextWebSocketHandler {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(MyMessageHandler.class);
-  private final String URL = "http://localhost:8080/websocket";
+
+  @Value("${socket.url}")
+  private String path;
   private MyMessageHandlerListener myMessageHandlerListener;
   private WebSocketSession session;
-
-  public MyMessageHandler() {
-  }
 
   public void connect() throws ExecutionException, InterruptedException {
     List<Transport> transports = new ArrayList<>(2);
     transports.add(new WebSocketTransport(new StandardWebSocketClient()));
     transports.add(new RestTemplateXhrTransport());
-
     SockJsClient sockJsClient = new SockJsClient(transports);
-    ListenableFuture<WebSocketSession> session = sockJsClient.doHandshake(this, URL);
+    ListenableFuture<WebSocketSession> session = sockJsClient.doHandshake(this, path);
     this.session = session.get();
   }
 
   @Override
-  public void afterConnectionEstablished(WebSocketSession session) throws Exception {
+  public void afterConnectionEstablished(WebSocketSession session) {
     this.session = session;
     LOGGER.info("TAILER CONNECTED");
     myMessageHandlerListener.status("afterConnectionEstablished");
   }
 
   @Override
-  public void handleMessage(WebSocketSession session, WebSocketMessage<?> message)
-      throws Exception {
+  public void handleMessage(WebSocketSession session, WebSocketMessage<?> message) {
     //LOGGER.info("handleMessage");
   }
 
   @Override
-  protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+  protected void handleTextMessage(WebSocketSession session, TextMessage message) {
     LOGGER.info("handleTextMessage");
   }
 
   @Override
-  protected void handlePongMessage(WebSocketSession session, PongMessage message) throws Exception {
+  protected void handlePongMessage(WebSocketSession session, PongMessage message) {
     LOGGER.info("handlePongMessage");
   }
 
   @Override
-  public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+  public void handleTransportError(WebSocketSession session, Throwable exception) {
     LOGGER.info("handleTransportError");
   }
 
@@ -83,25 +81,13 @@ public class MyMessageHandler extends TextWebSocketHandler {
     return super.supportsPartialMessages();
   }
 
-  public boolean sendMessage(String message) {
-    boolean success;
+  public void sendMessage(String message) {
 
     try {
-      if (session.isOpen()) {
-        session.sendMessage(new TextMessage(message));
-        success = true;
-      } else {
-        success = false;
-      }
+      session.sendMessage(new TextMessage(message));
     } catch (IOException e) {
       e.printStackTrace();
-      success = false;
     }
-    return success;
-  }
-
-  public boolean isSessionOpen() {
-    return session.isOpen();
   }
 
   public void setMyMessageHandlerListener(
