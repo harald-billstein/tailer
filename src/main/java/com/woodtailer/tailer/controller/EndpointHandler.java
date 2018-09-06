@@ -1,6 +1,6 @@
 package com.woodtailer.tailer.controller;
 
-import com.woodtailer.tailer.server.rest.endpoints.ServiceResonse;
+import com.woodtailer.tailer.server.rest.endpoints.ServiceResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -17,36 +17,39 @@ public class EndpointHandler {
     this.mainController = mainController;
   }
 
-  public ResponseEntity<ServiceResonse> startHeartbeat() {
-
+  public ResponseEntity<ServiceResponse> startPulse() {
     mainController.startPulseService();
-    ServiceResonse serviceResonse = new ServiceResonse();
-    serviceResonse.setServiceStarted(mainController.isPulseServiceRunning());
-    serviceResonse.setServiceName("Pulse service");
-    return ResponseEntity.ok(serviceResonse);
+
+    ServiceResponse serviceResponse = new ServiceResponse();
+    serviceResponse.setServiceRunning(mainController.isPulseServiceRunning());
+    serviceResponse.setServiceName("Pulse service");
+    return ResponseEntity.ok(serviceResponse);
   }
 
-  public ResponseEntity<ServiceResonse> startTailing() {
+  public ResponseEntity<ServiceResponse> startTailing() {
     mainController.startTailingService();
-    ServiceResonse serviceResonse = new ServiceResonse();
-    serviceResonse.setServiceStarted(mainController.isTailingServerRunning());
-    serviceResonse.setServiceName("Tailing service");
-    return ResponseEntity.ok(serviceResonse);
+
+    ServiceResponse serviceResponse = new ServiceResponse();
+    serviceResponse.setServiceRunning(mainController.isTailingServerRunning());
+    serviceResponse.setServiceName("Tailing service");
+    return ResponseEntity.ok(serviceResponse);
   }
 
-  public ResponseEntity<ServiceResonse> stopHeartBeat() {
-    ServiceResonse serviceResonse = new ServiceResonse();
-    serviceResonse.setServiceStarted(mainController.isPulseServiceRunning());
-    serviceResonse.setServiceName("Pulse service");
+  public ResponseEntity<ServiceResponse> stopPulse() {
     mainController.stopPulseService();
-    return ResponseEntity.ok(serviceResonse);
+
+    ServiceResponse serviceResponse = new ServiceResponse();
+    serviceResponse.setServiceRunning(mainController.isPulseServiceRunning());
+    serviceResponse.setServiceName("Pulse service");
+    return ResponseEntity.ok(serviceResponse);
   }
 
-  public ResponseEntity<ServiceResonse> stopTailing() {
-    ServiceResonse serviceResonse = new ServiceResonse();
-    serviceResonse.setServiceStarted(mainController.isTailingServerRunning());
-    serviceResonse.setServiceName("Tailing service");
+  public ResponseEntity<ServiceResponse> stopTailing() {
     mainController.stopTailingService();
-    return ResponseEntity.ok(serviceResonse);
+
+    ServiceResponse serviceResponse = new ServiceResponse();
+    serviceResponse.setServiceRunning(mainController.isTailingServerRunning());
+    serviceResponse.setServiceName("Tailing service");
+    return ResponseEntity.ok(serviceResponse);
   }
 }
