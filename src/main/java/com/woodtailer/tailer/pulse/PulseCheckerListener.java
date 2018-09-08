@@ -2,6 +2,6 @@ package com.woodtailer.tailer.pulse;
 
 public interface PulseCheckerListener {
 
-  void pulse(boolean pulse);
+  void pulse(String pulse);
 
 }

@@ -136,10 +136,10 @@ public class MainController implements TailerServiceListener, MyMessageHandlerLi
   }
 
   @Override
-  public void pulse(boolean pulse) {
-    if (isSocketOnline && pulse) {
+  public void pulse(String pulse) {
+    if (isSocketOnline && pulse != null) {
       LOGGER.info("DELIVERING : PULSE");
-      myMessageHandler.sendMessage("PULSE");
+      myMessageHandler.sendMessage(pulse);
     } else {
       LOGGER.warn("SOCKET OFFLINE PULSE NOT DELIVERED");
     }

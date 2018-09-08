@@ -3,6 +3,7 @@ package com.woodtailer.tailer.pulse;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import lombok.Data;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,17 +21,22 @@ public class PulseCheckerService implements Runnable {
   @Value("${pulse.url}")
   private URL url;
 
-  private boolean getPulse() {
+  private String getPulse() {
+    String response = null;
 
     try {
       HttpURLConnection connection = (HttpURLConnection) url.openConnection();
       connection.setRequestMethod("GET");
       connection.setRequestProperty("Accept", "application/json");
-      return connection.getResponseCode() == 200;
+
+      if (connection.getResponseCode() == 200) {
+        response = IOUtils.toString(connection.getInputStream(), "UTF-8");
+      }
 
     } catch (Exception e) {
-      return false;
+      return e.getMessage();
     }
+    return response;
   }
 
 

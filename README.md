@@ -1,13 +1,13 @@
 [![forthebadge](https://forthebadge.com/images/badges/made-with-java.svg)](https://forthebadge.com)&nbsp;[![forthebadge](https://forthebadge.com/images/badges/powered-by-electricity.svg)](https://forthebadge.com)
 <br>
 ## Tailer - An application monitor 
-Tailer monitors a log file. For each new row entered in the log file the application will be picked up and sent to a socket server (see separate git repo). The socket server will then distribute the message to all its subscribers (plugins).
+Tailer monitors a log file. For each new row entered in the log file the line will be picked up and sent to a socket server (see separate git repo). The socket server will then distribute the message to all its subscribers (plugins).
 <br>
 <br>
-Tailer can ask for a pulse (heartbeat) from the application. If this feature is activated, the application will send a pulse every 30 second, to the socket server. This can be used to see if the application that is producing the log file is up and running, good if no logs are being produced and you still want confirmation the application is up and running.
+Tailer can ask for extra information (recommend, Spring Boot Actuator) from the application. If this feature is activated, the application will send this information every 30 second to the socket server. This can be used to see if the application that is producing the log file is up and running, good if no logs are being produced and you still want confirmation the application is online, diskspace or database is up etc.
 
 **Server:<br>**
-Socket Server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https://github.com/harald-billstein/socketServer.git)&nbsp;(Coming soon)<br>
+Socket Server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https://github.com/harald-billstein/socketServer.git)&nbsp;<br>
 
 **Available plugins:<br>**
 Email Alerter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
