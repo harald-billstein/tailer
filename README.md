@@ -10,7 +10,7 @@ Tailer can ask for extra information (recommend, Spring Boot Actuator) from the 
 Socket Server&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https://github.com/harald-billstein/socketServer.git)&nbsp;<br>
 
 **Available plugins:<br>**
-Email Alerter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
+Email Alerter &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https://github.com/harald-billstein/emailAlert.git)&nbsp;(Coming soon)<br>
 Log Saver &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
 GUI Interface &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
 Cellphone notifications  &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
