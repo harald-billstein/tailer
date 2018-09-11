@@ -16,7 +16,7 @@ GUI Interface &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 Cellphone notifications  &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
 
 ## Motivation
-I was looking for a way to update a web view instantly, to push updates. The solution i found was web sockets. I wanted to learn more and decided to build the application. I choose Springboot, a framework i wanted to learn more about. The result will be an easy to use application that can be used to build more plugins, for your needs.
+I was looking for a way to update a web view instantly, to push updates. The solution i found was web sockets. I wanted to learn more and decided to build this application. I choose Springboot, a framework i wanted to learn more about. The result will be an easy to use application that can be used to build more plugins, for your needs.
 
 
 ## Tech/framework used
@@ -35,7 +35,7 @@ I was looking for a way to update a web view instantly, to push updates. The sol
 `2. Fill out logfile.url for the application to monitor.`<br>
 `3. Fill out pulse.url (recommended).`<br>
 `4. Optional communication port.`<br>
-`5. got to file build.sh and type: sh build.sh`
+`5. go to file build.sh and type: sh build.sh`
 
 ## API functions
 
