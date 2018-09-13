@@ -15,10 +15,6 @@ Log Saver &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbs
 GUI Interface &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
 Cellphone notifications  &nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;&nbsp;&nbsp;[Git repo](https:)&nbsp;(Coming soon)<br>
 
-## Motivation
-I was looking for a way to update a web view instantly, to push updates. The solution i found was web sockets. I wanted to learn more and decided to build this application. I choose Springboot, a framework i wanted to learn more about. The result will be an easy to use application that can be used to build more plugins, for your needs.
-
-
 ## Tech/framework used
 
 <b>Built with</b>
